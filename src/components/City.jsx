@@ -10,13 +10,22 @@ function City({ country, state }) {
 
     if (!country || !state) return;
 
-    fetch(
+      fetch(
       `https://location-selector.labs.crio.do/country=${encodeURIComponent(
         country
       )}/state=${encodeURIComponent(state)}/cities`
     )
-      .then((response) => response.json())
-      .then((data) => setCities(data));
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch cities");
+        }
+
+        return response.json();
+      })
+      .then((data) => setCities(data))
+      .catch((error) => {
+        console.error(error);
+      });
   }, [country, state]);
 
   const handleCityChange = (event) => {

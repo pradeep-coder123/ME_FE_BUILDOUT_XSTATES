@@ -5,11 +5,21 @@ function Country() {
   const [countries, setCountries] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
 
+
   useEffect(() => {
-    fetch("https://location-selector.labs.crio.do/countries")
-      .then((response) => response.json())
-      .then((data) => setCountries(data));
-  }, []);
+  fetch("https://location-selector.labs.crio.do/countries")
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Failed to fetch countries");
+      }
+
+      return response.json();
+    })
+    .then((data) => setCountries(data))
+    .catch((error) => {
+      console.error(error);
+    });
+}, []);
 
   const handleCountryChange = (event) => {
     setSelectedCountry(event.target.value);

@@ -11,13 +11,22 @@ function State({ country }) {
 
     if (!country) return;
 
-    fetch(
+        fetch(
       `https://location-selector.labs.crio.do/country=${encodeURIComponent(
         country
       )}/states`
     )
-      .then((response) => response.json())
-      .then((data) => setStates(data));
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch states");
+        }
+
+        return response.json();
+      })
+      .then((data) => setStates(data))
+      .catch((error) => {
+        console.error(error);
+      });
   }, [country]);
 
   const handleStateChange = (event) => {
